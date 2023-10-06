@@ -1,180 +1,43 @@
-resource "aws_instance" "frontend" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
+variable "ami" {
+  default = "ami-03265a0778a880afb"
+}
 
-  tags = {
-    Name = "frontend"
+variable "security_groups" {
+  default = ["sg-0634b360d4d7dc216"]
+}
+
+variable "instance_type" {
+  default = "t3.small"
+}
+
+variable "zone_id" {
+  default = "Z02904712FMTLMWVAWWYZ"
+}
+
+variable "components" {
+  default = {
+    frontend = { name = "frontend-dev"}
+    catalogue = { name = "catalogue-dev"}
+    mongodb = { name = "mongodb-dev"}
+    user = { name = "user-dev"}
+    cart = { name = "cart-dev"}
+    redis = { name = "redis-dev"}
+    mysql = { name = "mysql-dev"}
+    shipping = { name = "shipping-dev"}
+    payment = { name = "payment-dev"}
+    rabbitmq = { name = "rabbitmq-dev"}
   }
 }
 
-resource "aws_route53_record" "frontend" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "frontend-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.frontend.private_ip]
-}
 
-
-resource "aws_instance" "mongodb" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
+resource "aws_instance" "instance" {
+ for_each = var.components
+  ami = var.ami
+  instance_type = var.instance_type
+  vpc_security_group_ids = var.security_groups
 
   tags = {
-    Name = "mongodb"
+    Name = lookup(each.value,"name", null)
   }
 }
 
-resource "aws_route53_record" "mongodb" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "mongodb-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.mongodb.private_ip]
-}
-
-resource "aws_instance" "catalogue" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "catalogue"
-  }
-}
-
-resource "aws_route53_record" "catalogue" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "catalogue-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.catalogue.private_ip]
-}
-
-resource "aws_instance" "cart" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "cart"
-  }
-}
-
-resource "aws_route53_record" "cart" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "cart-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.cart.private_ip]
-}
-
-resource "aws_instance" "redis" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "redis"
-  }
-}
-
-resource "aws_route53_record" "redis" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "redis-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.redis.private_ip]
-}
-
-resource "aws_instance" "user" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "user"
-  }
-}
-
-resource "aws_route53_record" "user" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "user-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.user.private_ip]
-}
-
-resource "aws_instance" "mysql" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "mysql"
-  }
-}
-
-resource "aws_route53_record" "mysql" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "mysql-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.mysql.private_ip]
-}
-
-resource "aws_instance" "shipping" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "shipping"
-  }
-}
-
-resource "aws_route53_record" "shipping" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "shipping-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.shipping.private_ip]
-}
-
-resource "aws_instance" "rabbitmq" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "rabbitmq"
-  }
-}
-
-resource "aws_route53_record" "rabbitmq" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "rabbitmq-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.rabbitmq.private_ip]
-}
-
-resource "aws_instance" "payment" {
-  ami           = "ami-03265a0778a880afb"
-  instance_type = "t3.small"
-  vpc_security_group_ids = [ "sg-0634b360d4d7dc216" ]
-
-  tags = {
-    Name = "payment"
-  }
-}
-
-resource "aws_route53_record" "payment" {
-  zone_id = "Z02904712FMTLMWVAWWYZ"
-  name    = "payment-dev.gudishivadevops.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.payment.private_ip]
-}
