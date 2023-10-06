@@ -1,4 +1,4 @@
-# Plain Variables
+# Plain Variable
 variable "fruit_name" {
   default = "apple"
 }
@@ -7,7 +7,7 @@ output "fruit_name" {
   value = var.fruit_name
 }
 
-# List Variables
+# List Variable
 variable "fruits" {
   default = [
     "apple"
@@ -16,7 +16,7 @@ variable "fruits" {
   // default = [ "apple", "banana" ] // Single line syntax
 }
 
-# Map Variable , plain
+# Map Variable , Plain
 variable "fruit_stock" {
   default = {
     apple = 100
@@ -27,7 +27,7 @@ variable "fruit_stock" {
 # Map Variable, Map of Maps
 variable "fruit_stock_with_price" {
   default = {
-    apple ={
+    apple = {
       stock = 100
       price = 3
     }
