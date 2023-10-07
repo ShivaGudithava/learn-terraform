@@ -6,6 +6,10 @@ resource "aws_instance" "instance" {
   tags = {
     Name = var.name
   }
+
+  provisioner "local-exec" {
+    command = "sleep 60"
+  }
 }
 
 resource "aws_route53_record" "record" {
@@ -16,20 +20,19 @@ resource "aws_route53_record" "record" {
   records = [aws_instance.instance.private_ip ]
 }
 
-resource "null_resource" "ansible" {
+#resource "null_resource" "ansible" {
+#
+#  depends_on = [
+#    aws_route53_record.record
+#  ]
 
-  depends_on = [
-    aws_route53_record.record
-  ]
 
-  provisioner "local-exec" {
-    command = <<EOF
-cd home/root/roboshop-ansible
-git pull
-sleep 30
-ansible-playbook -i ${var.name}-dev.gudishivadevops.online, main.yml -e ansible_user=root -e ansible_password=DevOps321 -e component=${var.name}
-EOF
-  }
-}
+#cd home/root/roboshop-ansible
+#git pull
+#sleep 30
+#ansible-playbook -i ${var.name}-dev.gudishivadevops.online, main.yml -e ansible_user=root -e ansible_password=DevOps321 -e component=${var.name}
+#EOF
+#  }
+#}
 
 
