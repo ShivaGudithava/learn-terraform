@@ -16,4 +16,15 @@ resource "aws_route53_record" "record" {
   records = [aws_instance.instance.private_ip ]
 }
 
+resource "null_resource" "ansible" {
+  provisioner "local-exec" {
+    command = <<EOF
+cd /root/roboshop-ansible
+git pull
+ansible-playbook -i ${var.name}-dev.gudishivadevops.online, main.yml -e ansible_user=root -e ansible_password=DevOps321
+  -e component=${var.name}
+EOF
+  }
+}
+
 
